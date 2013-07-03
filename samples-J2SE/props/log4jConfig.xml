@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd"> 
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <!-- APPENDERS -->
+  <!-- Shortest and least useful console appender as it will not print out any 
+  	   additional info other than the message being passed into the logging method. -->
+  <appender name="briefConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+    	<param name="ConversionPattern" value="%m%n"/>
+    </layout>
+  </appender>
+ 
+  <!-- Detail console appender prints out less info than verbose console appender
+  	   and does not produce as much performance impact as verbose appender.
+  	   Can be used in production environment. -->	        
+  <appender name="detailConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+    	<param name="ConversionPattern" value="%-4r %d{ISO8601} [%t] %-5p %x %m%n"/>
+    </layout>
+  </appender>
+
+  <!-- Very verbose file appender. Lists, among other things class name, method name and 
+  	   line number where logging is coming from. -->	        
+  <appender name="verboseFileAppender" class="org.apache.log4j.FileAppender">
+    <param name="File" value="vlj.log"/>
+    <layout class="org.apache.log4j.PatternLayout">
+    	<param name="ConversionPattern" value="%-4r %d{ISO8601} [%t] %-5p %C:%M:%L - %m%n"/>
+    </layout>
+  </appender>
+
+  <!-- Audit console appender that is used to capture VLJ interaction time. -->
+  <appender name="interactionAuditConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+    	<param name="ConversionPattern" value="Time to execute VLJ interaction: %m%n"/>
+    </layout>
+  </appender>
+
+
+  <!-- LOGGERS -->
+  <!-- DEBUG-level loggers for VistaLink packages, override ROOT logger level
+       in production, usually turn on DEBUG level logging for troubleshooting specific problems only -->
+
+  <logger name="gov.va.med.vistalink.adapter.spi.VistaLinkManagedConnectionFactory" additivity="false" >
+        <level value="debug" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </logger>
+
+  <logger name="gov.va.med.vistalink.adapter.spi.VistaLinkManagedConnection" additivity="false" >
+        <level value="debug" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </logger>
+
+  <logger name="gov.va.med.vistalink.adapter.cci.VistaLinkConnectionFactory" additivity="false" >
+        <level value="debug" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </logger>
+
+  <logger name="gov.va.med.vistalink.security.KernelSecurityHandshake" additivity="false" >
+        <level value="debug" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </logger>
+
+  <logger name="gov.va.med.vistalink.security.VistaLoginModule" additivity="false" >
+        <level value="debug" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </logger>
+
+  <logger name="gov.va.med.vistalink.security.VistaLoginModuleSPIClientServer" additivity="false" >
+        <level value="debug" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </logger>
+
+  <!-- for VistALink sample J2SE apps only -->
+  <logger name="gov.va.med.vistalink.samples" additivity="false" >
+        <level value="debug" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </logger>
+
+  <!-- INFO-level logger: turn on to record timing audit information -->
+  <logger name="gov.va.med.monitor.time.AuditTimer" additivity="false" >
+        <level value="info" />
+    	<appender-ref ref="interactionAuditConsoleAppender"/>
+  </logger>
+
+  <!-- ROOT level logger: usually good to log all ERROR-level entries regardless of source -->
+  <root>
+        <level value="error" />
+    	<appender-ref ref="detailConsoleAppender"/>
+  </root>
+
+</log4j:configuration>
